@@ -2,24 +2,32 @@ import { prisma } from "./prisma"
 
 
 
-export const fetchartcilebysearch=async(search:string)=>{
-    const artciles= prisma.articles.findMany({
-where:{
-    OR:[
-        {title:{contains:search,mode:'insensitive'}},{category:{contains:search,mode:'insensitive'}}
-    ]
-},
-include:{
-    author:{
-        select:{
-            name:true,
-            email:true,
-            ImageUrl:true
-        }
-    }
-}
-    })
-
-    console.log(artciles)
-    return artciles;
-}
+export const fetchArticleByQuery = async (searchText: string, skip: number, take: number) => {
+    const [articles, total] = await prisma.$transaction([
+      prisma.articles.findMany({
+        where: {
+          OR: [
+            { title: { contains: searchText, mode: 'insensitive' } },
+            { category: { contains: searchText, mode: 'insensitive' } },
+          ],
+        },
+        include: {
+          author: {
+            select: { name: true, ImageUrl: true, email: true },
+          },
+        },
+        skip: skip,
+        take: take,
+      }),
+      prisma.articles.count({
+        where: {
+          OR: [
+            { title: { contains: searchText, mode: 'insensitive' } },
+            { category: { contains: searchText, mode: 'insensitive' } },
+          ],
+        },
+      }),
+    ]);
+  
+    return { articles, total };
+  };

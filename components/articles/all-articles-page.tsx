@@ -3,17 +3,27 @@ import { Card } from "../ui/card";
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
-import { fetchartcilebysearch } from "@/lib/fetcharticlebyquer";
 import { Search } from "lucide-react";
 import Link from "next/link";
+import { Prisma } from "@prisma/client";
 
 type ArticlePageProps={
-  search:string
+  articles:Prisma.ArticlesGetPayload<{
+    include:{
+      author:{
+        select:{
+          name:true,
+          email:true,
+          ImageUrl:true
+        }
+      }
+    }
+  }>[]
 }
-
-const AllArticlePage :React.FC<ArticlePageProps>= async({search}) => {
-  const articles=await fetchartcilebysearch(search)
-  if(!articles.length){
+const AllArticlePage :React.FC<ArticlePageProps>= async({articles}) => {
+  
+  
+  if(articles.length===0){
     return <NoSearchResults/>
   }
   return (
@@ -39,7 +49,7 @@ const AllArticlePage :React.FC<ArticlePageProps>= async({search}) => {
             <h3 className="text-xl font-semibold text-foreground">
               {article.title}
             </h3>
-            <p className="mt-2 text-muted-foreground">{article.category}</p>
+            <p className="mt-2 text-sm text-semibold text-muted-foreground">{article.category}</p>
 
             {/* Author & Metadata */}
             <div className="mt-6 flex items-center justify-between">
