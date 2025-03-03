@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { Button } from "../ui/button";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
