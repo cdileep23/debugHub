@@ -5,10 +5,32 @@ import { FileText, MessageCircleCodeIcon, PlusCircle, Star } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import RecentArticles from "./RecentArticles";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 
 const getData = async () => {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return { articles: [], totalComments: 0 }; // No articles if user not logged in
+  }
+
+  // Find user in your database
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      clerkUserId: userId
+    }
+  });
+
+  if (!existingUser) {
+    return { articles: [], totalComments: 0 }; // No articles if user not registered
+  }
+
+  // Fetch only articles by this user
   const [articles, totalComments] = await Promise.all([
     prisma.articles.findMany({
+      where: {
+        authorId: existingUser.id // Filter by logged-in user's ID
+      },
       orderBy: {
         createdAt: "desc",
       },
@@ -23,7 +45,13 @@ const getData = async () => {
         },
       },
     }),
-    prisma.comment.count(),
+    prisma.comment.count({
+      where: {
+        article: {
+          authorId: existingUser.id // Only comments on the user's articles
+        }
+      }
+    }),
   ]);
 
   return { articles, totalComments };

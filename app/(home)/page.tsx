@@ -4,6 +4,8 @@ import Hero from "@/components/home/herosection";
 import TopArticles from "@/components/home/topArcticles";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Suspense } from "react";
+import { AllArticlesPageSkeleton } from "../articles/page";
 
 export default function Home() {
   return (
@@ -22,7 +24,10 @@ export default function Home() {
           </div>
         </div>
 
-        <TopArticles />
+<Suspense fallback={<AllArticlesPageSkeleton/>}>
+<TopArticles />
+</Suspense>
+       
 
         <div className="mt-8 flex justify-center">
           <Link href="/articles">
