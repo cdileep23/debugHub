@@ -14,6 +14,7 @@ type LikeButtonProps = {
 
 const LikeButtonInArticle: React.FC<LikeButtonProps> = ({ articleId, likes, isLiked }) => {
     const [optimisticLike, setOptimisticLike] = useOptimistic(likes.length); 
+    console.log(optimisticLike)
     const [isPending, startTransition] = useTransition();
 
     const handleLike = async () => {
@@ -30,7 +31,7 @@ const LikeButtonInArticle: React.FC<LikeButtonProps> = ({ articleId, likes, isLi
         <div className="flex gap-4 mb-12 items-center border-t pt-8">
             {/* Use onClick instead of form submit */}
             <Button
-            
+             className="cursor"
                 type="button"
                 variant={"ghost"}
                 onClick={handleLike}

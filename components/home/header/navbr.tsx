@@ -5,16 +5,17 @@ import { Button } from "../../ui/button";
 import SearchInput from "./SearchInput";
 import ToggleMode from "./ToggleMode";
 import { Menu, X } from "lucide-react";
-import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
 
 const Navbar = () => {
   const [ismobilemenu, setMobilemenu] = useState(false);
-
+const user=useUser()
+console.log(user)
   return (
     <div className="sticky top-0 z-50 w-full border border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-6 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
+       
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center space-x-1">
               <span className="font-bold text-2xl">
@@ -26,29 +27,27 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
+         
           <div className="hidden md:flex items-center gap-4">
             <Link href="/articles" className="text-sm font-medium text-foreground hover:text-primary">
               Articles
             </Link>
-            <Link href="/tutorials" className="text-sm font-medium text-foreground hover:text-primary">
-              Tutorials
-            </Link>
-            <Link href="/about" className="text-sm font-medium text-foreground hover:text-primary">
-              About
-            </Link>
+          
             <Link href="/dashboard" className="text-sm font-medium text-foreground hover:text-primary">
               Dashboard
             </Link>
           </div>
 
-          {/* Search & Theme Toggle */}
+        
           <div className="flex items-center gap-4">
             <SearchInput />
             <ToggleMode />
 
             <SignedIn>
+              <div className="hidden md:flex">
               <UserButton />
+                </div>
+             
             </SignedIn>
 
             <SignedOut>
@@ -63,7 +62,7 @@ const Navbar = () => {
             </SignedOut>
           </div>
 
-          {/* Mobile Menu Button */}
+         
           <div className="flex items-center md:hidden">
             <Button
               variant="ghost"
@@ -77,29 +76,29 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+    
       {ismobilemenu && (
         <div className="md:hidden py-4 space-y-4 border-t">
-          {/* Mobile Navigation Links */}
+          
           <div className="space-y-2 px-4">
             <Link href="/articles" className="block px-3 py-2 text-base font-medium text-foreground" onClick={() => setMobilemenu(false)}>
               Articles
             </Link>
-            <Link href="/tutorials" className="block px-3 py-2 text-base font-medium text-foreground" onClick={() => setMobilemenu(false)}>
-              Tutorials
-            </Link>
-            <Link href="/about" className="block px-3 py-2 text-base font-medium text-foreground" onClick={() => setMobilemenu(false)}>
-              About
-            </Link>
+          
             <Link href="/dashboard" className="block px-3 py-2 text-base font-medium text-foreground" onClick={() => setMobilemenu(false)}>
               Dashboard
             </Link>
           </div>
 
-          {/* Mobile Authentication */}
+          
           <div className="px-4 flex flex-col gap-2">
             <SignedIn>
-              <UserButton />
+              <div className="flex items-center gap-5">
+              <UserButton />  {
+                user && <h1>{user?.user?.fullName}</h1>
+              }
+              </div>
+             
             </SignedIn>
             <SignedOut>
               <SignInButton>
