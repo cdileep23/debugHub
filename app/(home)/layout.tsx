@@ -1,36 +1,26 @@
 import { prisma } from '@/lib/prisma';
-import { currentUser } from '@clerk/nextjs/server'
+import { currentUser } from '@clerk/nextjs/server';
+import React from 'react';
 
-import React from 'react'
+const Layout = async ({ children }: { children: React.ReactNode }) => {
+    const user = await currentUser();
 
-const layout =async ({children}:{children:React.ReactNode}) => {
-    //when ever we need user in server component using clerk 
-
-    const user=await currentUser();
-    if(!user){
-        return  <div>
-        {children}
-      </div>
+    if (!user) {
+        return <div>{children}</div>;
     }
-    const loggedInUser=await prisma.user.findUnique({
-        where:{
-            clerkUserId:user.id
+
+    await prisma.user.upsert({
+        where: { clerkUserId: user.id },
+        update: {},
+        create: {
+            name: user.fullName || "Unknown User",
+            clerkUserId: user.id,
+            email: user.emailAddresses[0]?.emailAddress || "No Email",
+            ImageUrl: user.imageUrl
         }
-    })
-    if(!loggedInUser){
-        await prisma.user.create({data:{
-            name:user.fullName as string,
-            clerkUserId:user.id,
-            email:user.emailAddresses[0].emailAddress,
-            ImageUrl:user.imageUrl
-    
-        }})
-    }
-  return (
-    <div>
-      {children}
-    </div>
-  )
-}
+    });
 
-export default layout
+    return <div>{children}</div>;
+};
+
+export default Layout;

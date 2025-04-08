@@ -62,7 +62,7 @@ export const createComment = async (
         });
    
            revalidatePath(`/articles/${articleId}`)
-        // ✅ Add this return to satisfy TypeScript
+      
         return {
             errors: {},
         };

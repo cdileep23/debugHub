@@ -34,7 +34,7 @@ export const updateArticles = async (
     prevState: UpdateArticleFormState,
     formData: FormData,
 ): Promise<UpdateArticleFormState> => {
-    // ✅ Validate input fields
+
     const result = updateArticleSchema.safeParse({
         title: formData.get("title"),
         category: formData.get("category"),
@@ -47,7 +47,7 @@ export const updateArticles = async (
         };
     }
 
-    // ✅ Authenticate user
+   
     const { userId } = await auth();
     if (!userId) {
         return {
@@ -55,7 +55,7 @@ export const updateArticles = async (
         };
     }
 
-    // ✅ Find the existing article
+ 
     const existingArticle = await prisma.articles.findUnique({
         where: { id: articleId },
     });
@@ -66,7 +66,7 @@ export const updateArticles = async (
         };
     }
 
-    // ✅ Check if the user is the author
+   
     const user = await prisma.user.findUnique({
         where: { clerkUserId: userId },
     });
@@ -77,9 +77,8 @@ export const updateArticles = async (
         };
     }
 
-    let imageUrl = existingArticle.featuredImage; // Default to the existing image
+    let imageUrl = existingArticle.featuredImage;
 
-    // ✅ Check if a new image is provided
     const imageFile = formData.get("featuredImage") as File | null;
     if (imageFile && imageFile.name !== "undefined") {
         try {
@@ -124,7 +123,7 @@ export const updateArticles = async (
         }
     }
 
-    // ✅ Update the article in the database
+ 
     try {
         await prisma.articles.update({
             where: { id: articleId },
@@ -132,7 +131,7 @@ export const updateArticles = async (
                 title: result.data.title,
                 category: result.data.category,
                 content: result.data.content,
-                featuredImage: imageUrl, // Updated or existing image
+                featuredImage: imageUrl,
             },
         });
     } catch (error:unknown) {

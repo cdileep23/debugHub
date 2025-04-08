@@ -15,7 +15,7 @@ import { updateArticles } from "@/actions/editarticle";
 type editArticle={
   article:Articles
 }
-// Dynamically import ReactQuill, disabling SSR.
+
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 const EditArticle :React.FC<editArticle>= ({article}) => {

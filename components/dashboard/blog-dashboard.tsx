@@ -11,10 +11,9 @@ const getData = async () => {
   const { userId } = await auth();
 
   if (!userId) {
-    return { articles: [], totalComments: 0 }; // No articles if user not logged in
+    return { articles: [], totalComments: 0 };
   }
 
-  // Find user in your database
   const existingUser = await prisma.user.findUnique({
     where: {
       clerkUserId: userId
@@ -22,14 +21,14 @@ const getData = async () => {
   });
 
   if (!existingUser) {
-    return { articles: [], totalComments: 0 }; // No articles if user not registered
+    return { articles: [], totalComments: 0 };
   }
 
-  // Fetch only articles by this user
+ 
   const [articles, totalComments] = await Promise.all([
     prisma.articles.findMany({
       where: {
-        authorId: existingUser.id // Filter by logged-in user's ID
+        authorId: existingUser.id 
       },
       orderBy: {
         createdAt: "desc",
@@ -48,7 +47,7 @@ const getData = async () => {
     prisma.comment.count({
       where: {
         article: {
-          authorId: existingUser.id // Only comments on the user's articles
+          authorId: existingUser.id 
         }
       }
     }),
@@ -86,7 +85,7 @@ const Blogdashboard = async () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{articles.length}</div>
-            <p className="text-sm text-muted-foreground">+5 from last month</p>
+        
           </CardContent>
         </Card>
         <Card>
@@ -96,7 +95,7 @@ const Blogdashboard = async () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalComments}</div>
-            <p className="text-sm text-muted-foreground">12 waiting moderation</p>
+           
           </CardContent>
         </Card>
         <Card>
@@ -106,7 +105,7 @@ const Blogdashboard = async () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">4.2</div>
-            <p className="text-sm text-muted-foreground">+0.6 from last month</p>
+           
           </CardContent>
         </Card>
       </div>

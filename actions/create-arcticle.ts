@@ -79,11 +79,11 @@ return {
     };
   }
 
-  // Convert the File to an ArrayBuffer, then to a Node Buffer
+
   const arrayBuffer = await imageFile.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
-  // Upload the image to Cloudinary
+ 
   const uploadResult: UploadApiResponse | undefined = await new Promise(
     (resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(

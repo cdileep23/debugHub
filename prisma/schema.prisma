@@ -62,7 +62,7 @@ model Like{
   articleId String
   createdAt DateTime @default(now())
 
-  @@unique([userId,articleId])//ensure a user can like article oceonly
+  @@unique([userId,articleId])
 
 
 }

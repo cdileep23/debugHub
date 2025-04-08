@@ -7,7 +7,7 @@ type ArticleDetailPageProps = {
 }
 
 const page: React.FC<ArticleDetailPageProps> = async ({ params }) => {
-  const { id } = await params // Handle params as a Promise
+  const { id } = await params 
 
   if (!id) {
     return <h1 className="text-center text-red-500">Invalid Article ID</h1>

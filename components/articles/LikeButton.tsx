@@ -19,17 +19,17 @@ const LikeButtonInArticle: React.FC<LikeButtonProps> = ({ articleId, likes, isLi
 
     const handleLike = async () => {
         startTransition(async () => {
-            // Update like count optimistically
+         
             setOptimisticLike(isLiked ? optimisticLike - 1 : optimisticLike + 1);
             
-            // Call server action
+          
             await LikeDisLiketoggle(articleId);
         });
     };
 
     return (
         <div className="flex gap-4 mb-12 items-center border-t pt-8">
-            {/* Use onClick instead of form submit */}
+      
             <Button
              className="cursor"
                 type="button"

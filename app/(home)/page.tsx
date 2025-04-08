@@ -1,11 +1,25 @@
 import { DebugHubFooter } from "@/components/home/blog-footer";
 import Navbar from "@/components/home/header/navbr";
-import Hero from "@/components/home/herosection";
-import TopArticles from "@/components/home/topArcticles";
-import { Button } from "@/components/ui/button";
+import dynamic from 'next/dynamic';
 import Link from "next/link";
 import { Suspense } from "react";
-import { AllArticlesPageSkeleton } from "../articles/page";
+
+
+const Hero = dynamic(() => import('@/components/home/herosection'), {
+  loading: () => <div className="h-[500px] bg-gray-200 animate-pulse"></div>
+});
+
+const TopArticles = dynamic(() => import('@/components/home/topArcticles'), {
+  loading: () => (
+    <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 animate-pulse">
+      {[...Array(3)].map((_, i) => (
+        <div key={i} className="h-64 bg-gray-200 rounded-lg"></div>
+      ))}
+    </div>
+  )
+});
+
+const ViewAllBugsButton = dynamic(() => import('@/components/ui/button').then(mod => mod.Button));
 
 export default function Home() {
   return (
@@ -24,16 +38,21 @@ export default function Home() {
           </div>
         </div>
 
-<Suspense fallback={<AllArticlesPageSkeleton/>}>
-<TopArticles />
-</Suspense>
-       
+        <Suspense fallback={
+          <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 animate-pulse">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-64 bg-gray-200 rounded-lg"></div>
+            ))}
+          </div>
+        }>
+          <TopArticles />
+        </Suspense>
 
         <div className="mt-8 flex justify-center">
           <Link href="/articles">
-            <Button className="rounded-lg px-6 py-3 text-white bg-gray-900 hover:bg-gray-700 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-300 transition-all">
+            <ViewAllBugsButton className="rounded-lg px-6 py-3 text-white bg-gray-900 hover:bg-gray-700 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-300 transition-all">
               View All Bugs
-            </Button>
+            </ViewAllBugsButton>
           </Link>
         </div>
       </section>
